@@ -1,0 +1,13 @@
+{
+  "name": "@rabbit-backend/ghostenv",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": "bin/ghost.exe",
+  "scripts": {
+    "build": "go build -o bin/ghost.exe ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,3 +1,3 @@
 ```bash
-gosecret --app_name=test-application -- npm run dev
+npx @rabbit-backend/ghostenv --app_name=test-application -- {command}
 ```
