@@ -16,3 +16,9 @@ CREATE TABLE IF NOT EXISTS environment_variables (
     application TEXT NOT NULL,
     FOREIGN KEY(application) REFERENCES applications(app_name)
 );
+
+CREATE TABLE IF NOT EXISTS __session_storage (
+    session_id TEXT NOT NULL PRIMARY KEY,
+    user TEXT NOT NULL,
+    FOREIGN KEY(user) REFERENCES users(username)
+)

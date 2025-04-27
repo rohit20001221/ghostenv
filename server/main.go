@@ -6,7 +6,8 @@ import (
 	"net/http"
 
 	engine "github.com/rabbit-backend/template"
-	"github.com/rohit20001221/ghostenv-server/templates/db"
+	"github.com/rohit20001221/ghostenv-server/db"
+	"github.com/rohit20001221/ghostenv-server/middlewares"
 )
 
 var sqlEngine *engine.Engine
@@ -21,12 +22,21 @@ func init() {
 }
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
+	mux := http.NewServeMux()
 
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Welcome to ghostenv!"))
 	})
 
+	handler := middlewares.NewSessionMiddleware(
+		middlewares.LoggerMiddleware(
+			mux,
+		),
+		DB,
+		sqlEngine,
+	)
+
 	fmt.Println("👻 server started on http://localhost:3000")
-	http.ListenAndServe(":3000", nil)
+	http.ListenAndServe(":3000", handler)
 }
