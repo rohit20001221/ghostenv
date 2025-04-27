@@ -26,7 +26,7 @@ func main() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/home", controllers.HomePageController)
-	mux.HandleFunc("/login", controllers.LoginPageController)
+	mux.HandleFunc("/login", controllers.LoginPageController(DB, sqlEngine))
 	mux.HandleFunc("/register", controllers.RegisterController(DB, sqlEngine))
 
 	handler := middlewares.NewSessionMiddleware(

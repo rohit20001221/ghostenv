@@ -1,4 +1,10 @@
+github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
+github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/mattn/go-sqlite3 v1.14.28 h1:ThEiQrnbtumT+QMknw63Befp/ce/nUPgBPMlRFEum7A=
 github.com/mattn/go-sqlite3 v1.14.28/go.mod h1:Uh1q+B4BYcTPb+yiD3kU8Ct7aC0hY9fxUwlHK0RXw+Y=
 github.com/rabbit-backend/template v0.0.0-20250427080122-5b4afbcafe74 h1:oi2CyBr0bAyYie8IoMidU+6msyj5ZFKP2017tboS6gQ=
 github.com/rabbit-backend/template v0.0.0-20250427080122-5b4afbcafe74/go.mod h1:kpyn6ToHRMKtZF0blVIT1lO59gIDn4Wh5E/EfYKEGck=
+github.com/rabbit-backend/template v0.0.0-20250427145413-9b84dd2351a6 h1:/02hVLZm4mb4LNLNv2hXJqltBeuNrsc8U0PfK/2Iz0A=
+github.com/rabbit-backend/template v0.0.0-20250427145413-9b84dd2351a6/go.mod h1:kpyn6ToHRMKtZF0blVIT1lO59gIDn4Wh5E/EfYKEGck=
+github.com/rabbit-backend/template v0.0.0-20250427145956-84ce9b949bef h1:z2LlK09XcP5R5qT47CjXAbsXoVC9PhRsXIKkVd9WQSI=
+github.com/rabbit-backend/template v0.0.0-20250427145956-84ce9b949bef/go.mod h1:kpyn6ToHRMKtZF0blVIT1lO59gIDn4Wh5E/EfYKEGck=

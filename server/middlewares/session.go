@@ -3,6 +3,7 @@ package middlewares
 import (
 	"context"
 	"database/sql"
+	"log"
 	"net/http"
 
 	engine "github.com/rabbit-backend/template"
@@ -22,7 +23,8 @@ func NewSessionMiddleware(h http.Handler, db *sql.DB, e *engine.Engine) http.Han
 				map[string]string{"session_id": sessionId},
 			)
 
-			if err := db.QueryRow(query, args).Scan(&user); err != nil {
+			if err := db.QueryRow(query, args...).Scan(&user); err != nil {
+				log.Println(err)
 				user = nil
 			}
 		}

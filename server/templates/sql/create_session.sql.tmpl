@@ -1,0 +1,6 @@
+INSERT INTO __session_storage (session_id, user)
+VALUES
+(
+    {{ .sessionid  | __sql_arg__ }},
+    {{ .username   | __sql_arg__ }}
+);
