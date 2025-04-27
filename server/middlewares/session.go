@@ -7,9 +7,8 @@ import (
 	"net/http"
 
 	engine "github.com/rabbit-backend/template"
+	"github.com/rohit20001221/ghostenv-server/types"
 )
-
-type reqkey string
 
 func NewSessionMiddleware(h http.Handler, db *sql.DB, e *engine.Engine) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +28,7 @@ func NewSessionMiddleware(h http.Handler, db *sql.DB, e *engine.Engine) http.Han
 			}
 		}
 
-		ctx := context.WithValue(r.Context(), reqkey("user"), user)
+		ctx := context.WithValue(r.Context(), types.SessionKey("user"), user)
 		h.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

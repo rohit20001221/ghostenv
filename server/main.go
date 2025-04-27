@@ -29,6 +29,7 @@ func main() {
 	mux.HandleFunc("/home", controllers.HomePageController)
 	mux.HandleFunc("/login", controllers.LoginPageController(DB, sqlEngine))
 	mux.HandleFunc("/register", controllers.RegisterController(DB, sqlEngine))
+	mux.HandleFunc("/logout", controllers.LogoutController(DB, sqlEngine))
 
 	handler := middlewares.NewSessionMiddleware(
 		middlewares.LoggerMiddleware(
