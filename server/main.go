@@ -2,7 +2,7 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
+	"log"
 	"net/http"
 
 	engine "github.com/rabbit-backend/template"
@@ -19,6 +19,7 @@ func init() {
 	DB = db.CreateConnection()
 
 	query, args := sqlEngine.Execute("templates/sql/create_db.sql.tmpl", nil)
+	log.Println("[x] Initializing the application...")
 	DB.Exec(query, args...)
 }
 
@@ -37,6 +38,6 @@ func main() {
 		sqlEngine,
 	)
 
-	fmt.Println("👻 server started on http://localhost:3000")
+	log.Println("👻 server started on http://localhost:3000")
 	http.ListenAndServe(":3000", handler)
 }
