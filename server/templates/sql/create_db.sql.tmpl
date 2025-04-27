@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS users (
+    username TEXT PRIMARY KEY NOT NULL,
+    password TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS applications (
+    app_name TEXT PRIMARY KEY,
+    user TEXT NOT NULL,
+    description TEXT,
+    FOREIGN KEY (user) REFERENCES users(username)
+);
+
+CREATE TABLE IF NOT EXISTS environment_variables (
+    key TEXT NOT NULL,
+    value TEXT,
+    application TEXT NOT NULL,
+    FOREIGN KEY(application) REFERENCES applications(app_name)
+);
