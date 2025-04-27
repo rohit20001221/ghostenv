@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	engine "github.com/rabbit-backend/template"
+	"github.com/rohit20001221/ghostenv-server/controllers"
 	"github.com/rohit20001221/ghostenv-server/db"
 	"github.com/rohit20001221/ghostenv-server/middlewares"
 )
@@ -24,10 +25,9 @@ func init() {
 func main() {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("Welcome to ghostenv!"))
-	})
+	mux.HandleFunc("/home", controllers.HomePageController)
+	mux.HandleFunc("/login", controllers.LoginPageController)
+	mux.HandleFunc("/register", controllers.RegisterController(DB, sqlEngine))
 
 	handler := middlewares.NewSessionMiddleware(
 		middlewares.LoggerMiddleware(

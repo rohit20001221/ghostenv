@@ -1,0 +1,6 @@
+INSERT INTO users (username, password)
+VALUES
+(
+    {{ .username | __sql_arg__ }}, 
+    {{ .password | __sql_arg__ }}
+)
