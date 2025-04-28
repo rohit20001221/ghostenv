@@ -58,8 +58,6 @@ func LoginPageController(db *sql.DB, e *engine.Engine) http.HandlerFunc {
 				},
 			)
 
-			log.Println(query, args)
-
 			if _, err := db.Exec(query, args...); err != nil {
 				log.Println(err)
 
