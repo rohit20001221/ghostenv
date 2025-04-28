@@ -1,9 +1,13 @@
 package controllers
 
-import "net/http"
+import (
+	"net/http"
+	"os"
+)
 
 func HomePageController(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
-	w.Write([]byte("Welcome to ghostenv! 👻"))
+	f, _ := os.Open("templates/html/home.html")
+	f.WriteTo(w)
 }

@@ -1,0 +1,7 @@
+INSERT INTO applications (app_name, description, user)
+VALUES
+(
+    {{ .app_name    | __sql_arg__ }},
+    {{ .description | __sql_arg__ }},
+    {{ .user        | __sql_arg__ }}
+)

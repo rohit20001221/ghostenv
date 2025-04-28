@@ -26,15 +26,15 @@ func init() {
 func main() {
 	mux := http.NewServeMux()
 
-	mux.Handle("/home", middlewares.LoginRequiredMiddleware(
-		http.HandlerFunc(
-			controllers.HomePageController,
-		),
+	mux.Handle("/home", http.HandlerFunc(
+		controllers.HomePageController,
 	))
 
 	mux.HandleFunc("/login", controllers.LoginPageController(DB, sqlEngine))
 	mux.HandleFunc("/register", controllers.RegisterController(DB, sqlEngine))
 	mux.HandleFunc("/logout", controllers.LogoutController(DB, sqlEngine))
+
+	mux.Handle("/create_application", middlewares.LoginRequiredMiddleware(http.HandlerFunc(controllers.CreateApplicationController(DB, sqlEngine))))
 
 	handler := middlewares.NewSessionMiddleware(
 		middlewares.LoggerMiddleware(
