@@ -26,7 +26,7 @@ func CreateApplicationController(db *sql.DB, e *engine.Engine) http.HandlerFunc 
 				"templates/sql/create_application.sql.tmpl",
 				map[string]string{
 					"app_name":    r.FormValue("app_name"),
-					"description": r.FormValue("app_name"),
+					"description": r.FormValue("description"),
 					"user":        r.Context().Value(types.SessionKey("user")).(string),
 				},
 			)

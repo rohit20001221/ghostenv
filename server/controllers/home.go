@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
-	"os"
 
 	engine "github.com/rabbit-backend/template"
+	"github.com/rohit20001221/ghostenv-server/lib"
 	"github.com/rohit20001221/ghostenv-server/types"
 )
 
@@ -46,9 +46,14 @@ func HomePageController(db *sql.DB, e *engine.Engine) http.HandlerFunc {
 			applications = append(applications, app)
 		}
 
-		log.Println(applications)
+		html, err := lib.RenderTemplate("templates/html/home.html.tmpl", map[string]any{"applications": applications})
+		if err != nil {
+			log.Println(err)
 
-		f, _ := os.Open("templates/html/home.html")
-		f.WriteTo(w)
+			http.Error(w, "Unknown Error", http.StatusInternalServerError)
+			return
+		}
+
+		w.Write([]byte(html))
 	}
 }

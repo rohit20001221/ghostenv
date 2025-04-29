@@ -1,0 +1,13 @@
+{{ define "title" }} {{ end }}
+
+{{ define "main" }}
+    <p>Welcome to ghostenv!! 👻</p>
+    <a href="/create_application">Create Application</a>
+
+
+    <ul>
+        {{ range $app := .applications }}
+            <li>{{ $app.appName }}: {{ $app.description }}</li>
+        {{ end }}
+    </ul>
+{{ end }}
