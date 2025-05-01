@@ -1,0 +1,3 @@
+SELECT app_name, description, user FROM
+applications
+WHERE app_name = {{ .app_name | __sql_arg__ }}
