@@ -3,4 +3,24 @@
 {{ define "main" }}
     <h3>App: {{ .app_name }}</h3>
     <h3>Description: {{ .description }}</h3>
+
+    <form id="create-env">
+        <input name="app_name" value="{{ .app_name }}" type="hidden" />
+        <input name="key" />
+        <input name="value" />
+        <button type="submit">add</button>
+    </form>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("create-env").addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const data = new FormData(e.target);
+                await fetch(`/create_env`, {method: "POST", body: data}).then(res => res.json()).then(data => {
+                    console.log(data)
+                })
+            }) 
+        })
+    </script>
 {{ end }}
