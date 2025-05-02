@@ -1,0 +1,7 @@
+INSERT INTO environment_variables (key, value, application)
+VALUES
+(
+    {{ .key         | __sql_arg__ }},
+    {{ .value       | __sql_arg__ }},
+    {{ .application | __sql_arg__ }}
+)
