@@ -35,9 +35,41 @@ func ApplicationController(db *sql.DB, e *engine.Engine) http.HandlerFunc {
 			return
 		}
 
-		html, err := lib.RenderTemplate("templates/html/app.html.tmpl", map[string]string{
-			"app_name":    app,
-			"description": descritpion,
+		query, args = e.Execute(
+			"templates/sql/get_env_variables.sql.tmpl",
+			map[string]string{
+				"app_name": app,
+			},
+		)
+
+		log.Println(query, args)
+
+		envVariables := make([]map[string]string, 0)
+
+		rows, err := db.Query(query, args...)
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "Unexpected error", http.StatusInternalServerError)
+			return
+		}
+
+		for rows.Next() {
+			var key, value string
+
+			err := rows.Scan(&key, &value)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+
+			envVariables = append(envVariables, map[string]string{"key": key, "value": value})
+		}
+
+		log.Println(envVariables)
+		html, err := lib.RenderTemplate("templates/html/app.html.tmpl", map[string]any{
+			"app_name":      app,
+			"description":   descritpion,
+			"env_variables": envVariables,
 		})
 
 		if err != nil {

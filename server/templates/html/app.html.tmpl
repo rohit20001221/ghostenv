@@ -11,6 +11,12 @@
         <button type="submit">add</button>
     </form>
 
+    {{ range $env := .env_variables }}
+        <div>
+            {{ index $env "key" }}: {{ index $env "value" }}
+        </div>
+    {{ end }}
+
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("create-env").addEventListener("submit", async (e) => {
@@ -28,7 +34,7 @@
                 }}).then(res => res.json()).then(data => {
                     console.log(data)
                 })
-            }) 
+            })
         })
     </script>
 {{ end }}
