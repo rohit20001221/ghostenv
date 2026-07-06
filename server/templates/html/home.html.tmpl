@@ -1,17 +1,122 @@
-{{ define "title" }} {{ end }}
+{{ define "title" }} Home - Ghostenv 👻 {{ end }}
 
 {{ define "main" }}
-    <p>Welcome to ghostenv!! 👻</p>
-    <a href="/create_application">Create Application</a>
+<div class="max-w-4xl mx-auto p-6">
+    <!-- Hero / Welcome Header -->
+    <div class="text-center py-12 md:py-16">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-50 text-3xl rounded-2xl shadow-sm mb-4 animate-bounce">
+            👻
+        </div>
+        <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight sm:text-5xl">
+            Welcome to <span class="text-indigo-600">ghostenv</span>
+        </h1>
+        <p class="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:max-w-3xl">
+            Effortlessly manage, configure, and secure your application environment variables in one place.
+        </p>
+        
+        <!-- Create Application Action Button -->
+        <div class="mt-8 flex justify-center">
+            <a href="/create_application" 
+               class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 shadow-md transition-all duration-150 transform hover:-translate-y-0.5">
+                <svg class="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Create Application
+            </a>
+        </div>
+    </div>
 
+    <!-- Section Heading -->
+    <div class="flex items-center justify-between border-b border-gray-200 pb-4 mb-6">
+        <h2 class="text-lg font-semibold text-gray-900">Your Applications</h2>
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+            Total: {{ len .applications }}
+        </span>
+    </div>
 
-    <ul>
+    <!-- Applications Grid / List -->
+    <div class="grid gap-4 sm:grid-cols-2">
         {{ range $app := .applications }}
-            <li>
-                <a href="/application/{{$app.appName}}">
-                    {{ $app.appName }}: {{ $app.description }}
+        <div class="relative group block p-6 bg-white rounded-xl border border-gray-200 shadow-sm hover:border-indigo-500 hover:shadow-md transition-all duration-150 cursor-pointer"
+             onclick="window.location.href='/application/{{$app.appName}}'">
+            
+            <div class="flex items-start justify-between gap-4">
+                <span class="text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors truncate">
+                    {{ $app.appName }}
+                </span>
+                
+                <!-- Action Controls Wrapper -->
+                <div class="flex items-center space-x-2" onclick="event.stopPropagation();">
+                    <!-- Delete Application Button -->
+                    <button onclick="deleteApplication('{{ $app.appName }}')" 
+                            title="Delete Application"
+                            class="p-1.5 text-gray-400 hover:text-red-600 bg-transparent hover:bg-red-50 rounded-lg transition-colors duration-150 focus:outline-none">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" 
+                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </button>
+                    
+                    <!-- Chevron Pointer -->
+                    <svg class="w-5 h-5 text-gray-400 group-hover:text-indigo-500 transform group-hover:translate-x-1 transition-all pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </div>
+            
+            <p class="mt-2 text-sm text-gray-500 line-clamp-2 pr-6">
+                {{ if $app.description }}
+                    {{ $app.description }}
+                {{ else }}
+                    No description provided for this application.
+                {{ end }}
+            </p>
+        </div>
+        {{ else }}
+        <!-- Empty State if no apps exist -->
+        <div class="sm:col-span-2 text-center py-12 px-4 bg-white rounded-xl border border-dashed border-gray-300">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No applications</h3>
+            <p class="mt-1 text-sm text-gray-500">Get started by creating your first application config stack.</p>
+            <div class="mt-6">
+                <a href="/create_application" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
+                    Get Started
                 </a>
-            </li>
+            </div>
+        </div>
         {{ end }}
-    </ul>
+    </div>
+</div>
+
+<script>
+    const deleteApplication = async (appName) => {
+        if (!confirm(`Are you sure you want to delete "${appName}"? This will permanently clear all associated environment variables.`)) {
+            return;
+        }
+
+        try {
+            // Invokes the Go backend controller pattern: "DELETE /application/{app_name}/delete"
+            const response = await fetch(`/application/${appName}/delete`, {
+                method: "DELETE",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Deleted:", data);
+                window.location.reload(); // Refresh home dashboard view to show accurate list
+            } else {
+                alert("Failed to delete application. You might be unauthorized.");
+            }
+        } catch (error) {
+            console.error("Error executing application deletion request:", error);
+            alert("An unexpected network error occurred.");
+        }
+    }
+</script>
 {{ end }}

@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	engine "github.com/rabbit-backend/template"
+	"github.com/rohit20001221/ghostenv-server/types"
 )
 
 type DeleteEnvReqBody struct {
@@ -21,6 +22,27 @@ func DeleteEnvVariable(db *sql.DB, e *engine.Engine) http.HandlerFunc {
 			json.NewDecoder(r.Body).Decode(&body)
 
 			query, args := e.Execute(
+				"templates/sql/get_application_by_app_name.sql.tmpl",
+				map[string]string{
+					"app_name": body.AppId,
+				},
+			)
+
+			row := db.QueryRow(query, args...)
+
+			var userId, app, descritpion string
+			if err := row.Scan(&app, &descritpion, &userId); err != nil {
+				log.Println(err)
+				http.Error(w, "Unexpected error", http.StatusInternalServerError)
+				return
+			}
+
+			if r.Context().Value(types.SessionKey("user")) != userId {
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				return
+			}
+
+			query, args = e.Execute(
 				"templates/sql/delete_env_variable.sql",
 				body,
 			)
