@@ -30,6 +30,8 @@ func main() {
 		controllers.HomePageController(DB, sqlEngine),
 	)))
 
+	mux.Handle("/", http.HandlerFunc(controllers.IndexPageController()))
+
 	mux.HandleFunc("/login", controllers.LoginPageController(DB, sqlEngine))
 	mux.HandleFunc("/register", controllers.RegisterController(DB, sqlEngine))
 	mux.HandleFunc("/logout", controllers.LogoutController(DB, sqlEngine))
