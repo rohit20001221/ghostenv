@@ -37,6 +37,7 @@ func main() {
 	mux.Handle("/application/{app_name}", middlewares.LoginRequiredMiddleware(http.HandlerFunc(controllers.ApplicationController(DB, sqlEngine))))
 	mux.Handle("/create_env", middlewares.LoginRequiredMiddleware(http.HandlerFunc(controllers.CreateEnvVariable(DB, sqlEngine))))
 	mux.Handle("/delete_env", middlewares.LoginRequiredMiddleware(http.HandlerFunc(controllers.DeleteEnvVariable(DB, sqlEngine))))
+	mux.Handle("/env/{app_name}", http.HandlerFunc(controllers.PullEnvironmentVariables(DB, sqlEngine)))
 
 	handler := middlewares.NewSessionMiddleware(
 		middlewares.LoggerMiddleware(
