@@ -11,7 +11,7 @@ import (
 
 type DeleteEnvReqBody struct {
 	Key   string `json:"key"`
-	AppId string `json:"app_id"`
+	AppId string `json:"application"`
 }
 
 func DeleteEnvVariable(db *sql.DB, e *engine.Engine) http.HandlerFunc {
@@ -24,6 +24,8 @@ func DeleteEnvVariable(db *sql.DB, e *engine.Engine) http.HandlerFunc {
 				"templates/sql/delete_env_variable.sql",
 				body,
 			)
+
+			log.Println(query, args)
 
 			if _, err := db.Exec(query, args...); err != nil {
 				log.Println(err)

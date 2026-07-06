@@ -4,6 +4,7 @@
     <h3>App: {{ .app_name }}</h3>
     <h3>Description: {{ .description }}</h3>
 
+    <input type="hidden" id="app_name" value="{{ .app_name }}" />
     <form id="create-env">
         <input name="app_name" value="{{ .app_name }}" type="hidden" />
         <input name="key" />
@@ -13,11 +14,31 @@
 
     {{ range $env := .env_variables }}
         <div>
-            {{ index $env "key" }}: {{ index $env "value" }}
+            {{ index $env "key" }}: {{ index $env "value" }} <button onclick="deleteEnvVariable('{{ .key }}')">delete</button>
         </div>
     {{ end }}
 
     <script>
+        const deleteEnvVariable = async (key) => {
+            const appName = document.getElementById("app_name").value;
+
+            const fd = new URLSearchParams();
+            fd.append("key", key);
+            fd.append("application", appName);
+
+            await fetch("/delete_env", {
+                method: "POST", 
+                body: JSON.stringify({
+                    "application": appName,
+                    "key": key
+                }),
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json" 
+                }
+            }).then(res => res.json()).then(data => {console.log(data)})
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("create-env").addEventListener("submit", async (e) => {
                 e.preventDefault();
