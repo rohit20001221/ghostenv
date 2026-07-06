@@ -52,6 +52,5 @@ func DeleteApplicationController(db *sql.DB, e *engine.Engine) http.HandlerFunc 
 		}
 
 		json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
-		return
 	}
 }
