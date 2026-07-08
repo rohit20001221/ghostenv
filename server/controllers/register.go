@@ -14,7 +14,7 @@ import (
 func RegisterController(db *sql.DB, e *engine.Engine) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
-			f, _ := os.Open("templates/html/auth/register.html")
+			f, _ := os.Open("templates/html/register.html")
 
 			w.WriteHeader(http.StatusOK)
 			w.Header().Add("Content-Type", "text/html")

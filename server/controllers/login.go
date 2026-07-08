@@ -15,7 +15,7 @@ import (
 func LoginController(db *sql.DB, e *engine.Engine) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
-			f, _ := os.Open("templates/html/auth/login.html")
+			f, _ := os.Open("templates/html/login.html")
 
 			w.WriteHeader(http.StatusOK)
 			f.WriteTo(w)
@@ -69,6 +69,7 @@ func LoginController(db *sql.DB, e *engine.Engine) http.HandlerFunc {
 			cookie.Name = "session_id"
 
 			cookie.Value = sessionId.String()
+			cookie.Path = "/"
 
 			http.SetCookie(w, &cookie)
 			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
