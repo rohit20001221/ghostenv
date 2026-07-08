@@ -5,7 +5,8 @@
   "main": "index.js",
   "bin": "bin/ghost.exe",
   "scripts": {
-    "build": "go build -o bin/ghost.exe ."
+    "build": "go build -o bin/ghost.exe .",
+    "test": "echo $DATABASE_URL"
   },
   "keywords": [],
   "author": "",

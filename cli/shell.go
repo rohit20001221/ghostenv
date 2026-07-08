@@ -49,7 +49,7 @@ func CreateCommand(appName *string) func(*cobra.Command, []string) {
 		}
 
 		// 4. Decode the key-value dictionary from the payload pipeline
-		var remoteEnv map[string]string
+		var remoteEnv []map[string]string
 		if err := json.NewDecoder(resp.Body).Decode(&remoteEnv); err != nil {
 			log.Fatalf("Failed to decode environment payload schema: %v", err)
 		}
@@ -71,8 +71,8 @@ func CreateCommand(appName *string) func(*cobra.Command, []string) {
 		localEnv := os.Environ()
 
 		// 7. Inject remote system variables formatting them as "KEY=VALUE"
-		for key, value := range remoteEnv {
-			localEnv = append(localEnv, fmt.Sprintf("%s=%s", key, value))
+		for _, env := range remoteEnv {
+			localEnv = append(localEnv, fmt.Sprintf("%s=%s", env["key"], env["value"]))
 		}
 		command.Env = localEnv
 
