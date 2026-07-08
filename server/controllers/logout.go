@@ -38,6 +38,6 @@ func LogoutController(db *sql.DB, e *engine.Engine) http.HandlerFunc {
 		}
 
 		http.SetCookie(w, cookie)
-		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		http.Redirect(w, r, "/auth/login", http.StatusSeeOther)
 	}
 }

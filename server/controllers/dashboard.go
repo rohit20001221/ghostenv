@@ -10,7 +10,7 @@ import (
 	"github.com/rohit20001221/ghostenv-server/types"
 )
 
-func HomePageController(db *sql.DB, e *engine.Engine) http.HandlerFunc {
+func DashboardController(db *sql.DB, e *engine.Engine) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 
@@ -46,7 +46,7 @@ func HomePageController(db *sql.DB, e *engine.Engine) http.HandlerFunc {
 			applications = append(applications, app)
 		}
 
-		html, err := lib.RenderTemplate("templates/html/home.html.tmpl", map[string]any{"applications": applications})
+		html, err := lib.RenderTemplate("templates/html/dashboard.html.tmpl", map[string]any{"applications": applications})
 		if err != nil {
 			log.Println(err)
 

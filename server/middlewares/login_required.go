@@ -10,7 +10,7 @@ func LoginRequiredMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user := r.Context().Value(types.SessionKey("user"))
 		if user == nil {
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			http.Redirect(w, r, "/auth/login", http.StatusSeeOther)
 			return
 		}
 

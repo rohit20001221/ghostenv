@@ -38,7 +38,7 @@ func CreateApplicationController(db *sql.DB, e *engine.Engine) http.HandlerFunc 
 				return
 			}
 
-			http.Redirect(w, r, "/home", http.StatusSeeOther)
+			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 			return
 		}
 

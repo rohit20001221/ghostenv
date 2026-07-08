@@ -12,10 +12,10 @@ import (
 	engine "github.com/rabbit-backend/template"
 )
 
-func LoginPageController(db *sql.DB, e *engine.Engine) http.HandlerFunc {
+func LoginController(db *sql.DB, e *engine.Engine) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
-			f, _ := os.Open("templates/html/login.html")
+			f, _ := os.Open("templates/html/auth/login.html")
 
 			w.WriteHeader(http.StatusOK)
 			f.WriteTo(w)
@@ -71,7 +71,7 @@ func LoginPageController(db *sql.DB, e *engine.Engine) http.HandlerFunc {
 			cookie.Value = sessionId.String()
 
 			http.SetCookie(w, &cookie)
-			http.Redirect(w, r, "/home", http.StatusSeeOther)
+			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 			return
 		}
 

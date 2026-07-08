@@ -28,15 +28,41 @@ func init() {
 func main() {
 	mux := http.NewServeMux()
 
-	mux.Handle("/home", middlewares.LoginRequiredMiddleware(http.HandlerFunc(
-		controllers.HomePageController(DB, sqlEngine),
-	)))
+	mux.Handle("/dashboard",
+		middlewares.LoginRequiredMiddleware(
+			http.HandlerFunc(
+				controllers.DashboardController(DB, sqlEngine),
+			),
+		),
+	)
 
-	mux.Handle("/", http.HandlerFunc(controllers.IndexPageController()))
+	mux.Handle("/",
+		http.HandlerFunc(
+			controllers.HomeController(),
+		),
+	)
 
-	mux.HandleFunc("/login", controllers.LoginPageController(DB, sqlEngine))
-	mux.HandleFunc("/register", controllers.RegisterController(DB, sqlEngine))
-	mux.HandleFunc("/logout", controllers.LogoutController(DB, sqlEngine))
+	mux.HandleFunc("/auth/login",
+		controllers.LoginController(
+			DB,
+			sqlEngine,
+		),
+	)
+
+	mux.HandleFunc("/auth/register",
+		controllers.RegisterController(
+			DB,
+			sqlEngine,
+		),
+	)
+
+	mux.HandleFunc("/auth/logout",
+		controllers.LogoutController(
+			DB,
+			sqlEngine,
+		),
+	)
+
 	mux.Handle("/create_application", middlewares.LoginRequiredMiddleware(http.HandlerFunc(controllers.CreateApplicationController(DB, sqlEngine))))
 	mux.Handle("/application/{app_name}", middlewares.LoginRequiredMiddleware(http.HandlerFunc(controllers.ApplicationController(DB, sqlEngine))))
 	mux.Handle("DELETE /application/{app_name}/delete", middlewares.LoginRequiredMiddleware(http.HandlerFunc(controllers.DeleteApplicationController(DB, sqlEngine))))
