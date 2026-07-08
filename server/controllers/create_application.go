@@ -13,7 +13,7 @@ import (
 func CreateApplicationController(db *sql.DB, e *engine.Engine) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
-			f, _ := os.Open("templates/html/create_application.html")
+			f, _ := os.Open("templates/html/dashboard/apps/create.html")
 			f.WriteTo(w)
 
 			return
@@ -23,7 +23,7 @@ func CreateApplicationController(db *sql.DB, e *engine.Engine) http.HandlerFunc 
 			r.ParseForm()
 
 			query, args := e.Execute(
-				"templates/sql/create_application.sql.tmpl",
+				"templates/sql/dashboard/apps/create.sql.tmpl",
 				map[string]string{
 					"app_name":    r.FormValue("app_name"),
 					"description": r.FormValue("description"),

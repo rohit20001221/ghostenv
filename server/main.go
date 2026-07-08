@@ -63,12 +63,50 @@ func main() {
 		),
 	)
 
-	mux.Handle("/create_application", middlewares.LoginRequiredMiddleware(http.HandlerFunc(controllers.CreateApplicationController(DB, sqlEngine))))
-	mux.Handle("/application/{app_name}", middlewares.LoginRequiredMiddleware(http.HandlerFunc(controllers.ApplicationController(DB, sqlEngine))))
-	mux.Handle("DELETE /application/{app_name}/delete", middlewares.LoginRequiredMiddleware(http.HandlerFunc(controllers.DeleteApplicationController(DB, sqlEngine))))
-	mux.Handle("/create_env", middlewares.LoginRequiredMiddleware(http.HandlerFunc(controllers.CreateEnvVariable(DB, sqlEngine))))
-	mux.Handle("/delete_env", middlewares.LoginRequiredMiddleware(http.HandlerFunc(controllers.DeleteEnvVariable(DB, sqlEngine))))
-	mux.Handle("/env/{app_name}", middlewares.NewBasicAuthMiddleware(http.HandlerFunc(controllers.PullEnvironmentVariables(DB, sqlEngine))))
+	mux.Handle("/dashboard/apps/{app_name}",
+		middlewares.LoginRequiredMiddleware(
+			http.HandlerFunc(
+				controllers.ApplicationController(DB, sqlEngine),
+			),
+		),
+	)
+
+	mux.Handle("/dashboard/apps/create",
+		middlewares.LoginRequiredMiddleware(
+			http.HandlerFunc(
+				controllers.CreateApplicationController(
+					DB,
+					sqlEngine,
+				),
+			),
+		),
+	)
+
+	mux.Handle("DELETE /dashboard/apps/{app_name}/delete",
+		middlewares.LoginRequiredMiddleware(
+			http.HandlerFunc(
+				controllers.DeleteApplicationController(
+					DB,
+					sqlEngine,
+				),
+			),
+		),
+	)
+
+	mux.Handle("/apps/{app_name}/env",
+		middlewares.LoginRequiredMiddleware(
+			http.HandlerFunc(
+				controllers.CreateEnvVariable(
+					DB,
+					sqlEngine,
+				),
+			),
+		),
+	)
+
+	mux.Handle("/apps/{app_name}/env/delete", middlewares.LoginRequiredMiddleware(http.HandlerFunc(controllers.DeleteEnvVariable(DB, sqlEngine))))
+
+	mux.Handle("/api/v1/pull/{app_name}", middlewares.NewBasicAuthMiddleware(http.HandlerFunc(controllers.PullEnvironmentVariables(DB, sqlEngine))))
 
 	handler := middlewares.NewSessionMiddleware(
 		middlewares.LoggerMiddleware(
