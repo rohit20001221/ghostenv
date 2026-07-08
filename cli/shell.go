@@ -12,49 +12,57 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// ANSI Escape Color Codes
+const (
+	Reset  = "\033[0m"
+	Bold   = "\033[1m"
+	Ghost  = "\033[38;5;141m" // Soft purple/magenta glow
+	Cyan   = "\033[36m"
+	Green  = "\033[32m"
+	Red    = "\033[31m"
+	Yellow = "\033[33m"
+)
+
 func CreateCommand(appName *string) func(*cobra.Command, []string) {
 	return func(cmd *cobra.Command, args []string) {
 		app := *appName
 		if app == "" {
-			log.Fatalln("Error: Application name flag (--app) must be provided")
+			log.Fatalln(Red + "❌ Error: Application name flag (--app) must be provided" + Reset)
 		}
 
 		if len(args) == 0 {
-			log.Fatalln("Error: Insufficient arguments. Provide a command to run (e.g., 'ghostenv --app my-app npm run dev')")
+			log.Fatalln(Red + "❌ Error: Provide a command to execute (e.g., 'ghostenv --app billing npm run dev')" + Reset)
 		}
 
-		fmt.Printf("[x] Fetching environment for application: %s...\n", app)
+		// --- Fun, colorful intro ---
+		fmt.Printf("%s👻 ghostenv%s %s⟡ Summoning environment for:%s %s%s%s...\n",
+			Ghost, Reset, Cyan, Reset, Bold+Green, app, Reset)
 
-		// 1. Build the HTTP Client and Request targeting your standardized API layout
 		client := &http.Client{Timeout: 10 * time.Second}
 		apiURL := fmt.Sprintf("%s/api/v1/pull/%s", os.Getenv("GHOST_ENV_BASE_URL"), app)
 
 		req, err := http.NewRequest("GET", apiURL, nil)
 		if err != nil {
-			log.Fatalf("Failed to initialize request lifecycle: %v", err)
+			log.Fatalf(Red+"❌ Failed to initialize request lifecycle: %v\n"+Reset, err)
 		}
 
-		// 2. Attach Basic Authentication parameters
 		req.SetBasicAuth(os.Getenv("GHOST_ENV_USERNAME"), os.Getenv("GHOST_ENV_PASSWORD"))
 
-		// 3. Dispatch request to backend server
 		resp, err := client.Do(req)
 		if err != nil {
-			log.Fatalf("Failed to reach environment configuration server: %v", err)
+			log.Fatalf(Red+"❌ Failed to reach environment configuration server: %v\n"+Reset, err)
 		}
 		defer resp.Body.Close()
 
 		if resp.StatusCode != http.StatusOK {
-			log.Fatalf("Server rejected credentials or application scope with status: %s", resp.Status)
+			log.Fatalf(Red+"❌ Server rejected credentials or application scope with status: %s\n"+Reset, resp.Status)
 		}
 
-		// 4. Decode the key-value dictionary from the payload pipeline
 		var remoteEnv []map[string]string
 		if err := json.NewDecoder(resp.Body).Decode(&remoteEnv); err != nil {
-			log.Fatalf("Failed to decode environment payload schema: %v", err)
+			log.Fatalf(Red+"❌ Failed to decode environment payload schema: %v\n"+Reset, err)
 		}
 
-		// 5. Structure the execution target context
 		executionTarget := args[0]
 		var executionArgs []string
 		if len(args) > 1 {
@@ -64,26 +72,30 @@ func CreateCommand(appName *string) func(*cobra.Command, []string) {
 		command := exec.Command(executionTarget, executionArgs...)
 
 		command.Stdout = os.Stdout
-		command.Stderr = os.Stderr // Added so sub-process runtime failures dump logs explicitly
+		command.Stderr = os.Stderr
 		command.Stdin = os.Stdin
 
-		// 6. Inherit local system environment strings cleanly
 		localEnv := os.Environ()
 
-		// 7. Inject remote system variables formatting them as "KEY=VALUE"
+		// --- Track injection stats ---
+		varsInjected := 0
 		for _, env := range remoteEnv {
 			localEnv = append(localEnv, fmt.Sprintf("%s=%s", env["key"], env["value"]))
+			varsInjected++
 		}
 		command.Env = localEnv
 
-		// 8. Hand execution flow directly to the sub-process context loop
-		fmt.Printf("[x] Spawning runner context: %s\n", executionTarget)
+		// --- Success message before spawning ---
+		fmt.Printf("%s✨ Success!%s %sInjected %d ghostly variables into context.%s\n",
+			Green, Reset, Cyan, varsInjected, Reset)
+		fmt.Printf("%s🚀 Spawning process:%s %s%s%s\n\n",
+			Yellow, Reset, Bold, executionTarget, Reset)
+
 		if err := command.Run(); err != nil {
-			// Catch non-zero exit states cleanly without generating a fatalln stack trace crash
 			if exitErr, ok := err.(*exec.ExitError); ok {
 				os.Exit(exitErr.ExitCode())
 			}
-			log.Fatalf("Process system thread dropped unexpectedly: %v", err)
+			log.Fatalf(Red+"❌ Process system thread dropped unexpectedly: %v\n"+Reset, err)
 		}
 	}
 }
