@@ -35,14 +35,13 @@ func RegisterController(db *sql.DB, e *engine.Engine) http.HandlerFunc {
 				},
 			)
 
-			log.Println(query, args)
 			if _, err := db.Exec(query, args...); err != nil {
 				log.Println(err)
 				http.Error(w, "Failed to create user", http.StatusInternalServerError)
 				return
 			}
 
-			w.Write([]byte("ok"))
+			http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 			return
 		}
 

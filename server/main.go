@@ -15,12 +15,14 @@ var sqlEngine *engine.Engine
 var DB *sql.DB
 
 func init() {
-	sqlEngine = engine.NewEngineWithPlaceHolder(engine.NewSqlitePlaceholder())
+	sqlEngine = engine.NewEngineWithPlaceHolder(engine.NewPostgresPlaceHolder())
 	DB = db.CreateConnection()
 
 	query, args := sqlEngine.Execute("templates/sql/create_db.sql.tmpl", nil)
 	log.Println("[x] Initializing the application...")
-	DB.Exec(query, args...)
+	if _, err := DB.Exec(query, args...); err != nil {
+		log.Fatalln(err)
+	}
 }
 
 func main() {

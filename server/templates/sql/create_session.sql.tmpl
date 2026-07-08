@@ -1,4 +1,4 @@
-INSERT INTO __session_storage (session_id, user)
+INSERT INTO __session_storage (session_id, "user")
 VALUES
 (
     {{ .sessionid  | __sql_arg__ }},

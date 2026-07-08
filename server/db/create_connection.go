@@ -2,12 +2,13 @@ package db
 
 import (
 	"database/sql"
+	"os"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/lib/pq"
 )
 
 func CreateConnection() *sql.DB {
-	DB, err := sql.Open("sqlite3", "data.db")
+	DB, err := sql.Open("postgres", os.Getenv("POSTGRES_CONNECTION"))
 	if err != nil {
 		panic(err)
 	}
