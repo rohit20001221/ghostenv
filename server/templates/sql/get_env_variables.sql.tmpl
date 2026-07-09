@@ -1,3 +1,0 @@
-SELECT key, value 
-FROM environment_variables
-WHERE application = {{ .app_name | __sql_arg__ }};
